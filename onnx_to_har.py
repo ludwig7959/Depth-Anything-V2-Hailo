@@ -25,22 +25,51 @@ parser.add_argument(
 parser.add_argument(
     "--output-path", type=str, required=True, help="Path to save the HAR file"
 )
+parser.add_argument(
+    "--input-size",
+    type=int,
+    nargs=2,
+    default=(952, 476),
+    help="Input size of the model, you can skip this if you defined the input size in the ONNX model. (Width, Height)",
+)
 args = parser.parse_args()
 
 
-def onnx_to_har(args: dict):
-    runner = ClientRunner(hw_arch=args.hw_arch)
+def onnx_to_har(
+    hw_arch: str,
+    onnx_path: str,
+    onnx_model_name: str,
+    output_path: str,
+    input_size: tuple[int, int],
+):
+    """
+    Convert an ONNX model to a Hailo Archive file.
+    """
+    runner = ClientRunner(hw_arch=hw_arch)
     hn, npz = runner.translate_onnx_model(
-        args.onnx_path,
-        args.onnx_model_name,
+        onnx_path,
+        onnx_model_name,
+        # Input node name of Depth Anything V2 model
         start_node_names=["image"],
+        # Output node name of Depth Anything V2 model
         end_node_names=["depth"],
-        net_input_shapes={"image": [1, 3, 480, 640]},
+        net_input_shapes=(
+            None
+            if input_size[0] == 0 and input_size[1] == 0
+            else {"image": [1, 3, input_size[1], input_size[0]]}
+        ),
     )
 
-    runner.save_har(args.output_path)
-    print(f"Saved HAR to {args.output_path}")
+    # Save the HAR file
+    runner.save_har(output_path)
+    print(f"Saved HAR to {output_path}")
 
 
 if __name__ == "__main__":
-    onnx_to_har(args)
+    onnx_to_har(
+        hw_arch=args.hw_arch,
+        onnx_path=args.onnx_path,
+        onnx_model_name=args.onnx_model_name,
+        output_path=args.output_path,
+        input_size=args.input_size,
+    )
