@@ -25,13 +25,6 @@ parser.add_argument(
 parser.add_argument(
     "--output-path", type=str, required=True, help="Path to save the HAR file"
 )
-parser.add_argument(
-    "--input-size",
-    type=int,
-    nargs=2,
-    default=(952, 476),
-    help="Input size of the model, you can skip this if you defined the input size in the ONNX model. (Width, Height)",
-)
 args = parser.parse_args()
 
 
@@ -52,12 +45,7 @@ def onnx_to_har(
         # Input node name of Depth Anything V2 model
         start_node_names=["image"],
         # Output node name of Depth Anything V2 model
-        end_node_names=["depth"],
-        net_input_shapes=(
-            None
-            if input_size[0] == 0 and input_size[1] == 0
-            else {"image": [1, 3, input_size[1], input_size[0]]}
-        ),
+        end_node_names=["/Gather_4"],
     )
 
     # Save the HAR file
