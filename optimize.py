@@ -2,7 +2,7 @@ import argparse
 import os
 
 import numpy as np
-from hailo_sdk_client import ClientRunner, CalibrationDataType
+from hailo_sdk_client import CalibrationDataType, ClientRunner
 
 # -----------------------------------------------------------------------------
 # Argument Parser
@@ -40,9 +40,11 @@ def optimize(har_path: str, calib_dataset_path: str, output_path: str):
     runner = ClientRunner(har=har_path)
 
     # Define the model script
-    scripts = f"model_optimization_flavor(batch_size={args.batch_size})\n"
-    scripts += "input_normalization = normalization([123.675, 116.28, 103.53], [58.395, 57.12, 57.375])"
-    runner.load_model_script(scripts)
+    all_lines = [
+        f"model_optimization_flavor(batch_size={args.batch_size})\n",
+        "input_normalization = normalization([123.675, 116.28, 103.53], [58.395, 57.12, 57.375])\n",
+    ]
+    runner.load_model_script("".join(all_lines))
 
     # Load the calibration dataset
     calib_dataset = np.load(calib_dataset_path)
