@@ -2,7 +2,7 @@ import argparse
 import os
 
 import numpy as np
-from hailo_sdk_client import ClientRunner
+from hailo_sdk_client import ClientRunner, CalibrationDataType
 
 # -----------------------------------------------------------------------------
 # Argument Parser
@@ -47,7 +47,7 @@ def optimize(har_path: str, calib_dataset_path: str, output_path: str):
     # Load the calibration dataset
     calib_dataset = np.load(calib_dataset_path)
     # Quantize and optimize the model
-    runner.optimize(calib_dataset)
+    runner.optimize(calib_dataset, data_type=CalibrationDataType.np_array)
 
     # Save the optimized model
     runner.save_har(output_path)
