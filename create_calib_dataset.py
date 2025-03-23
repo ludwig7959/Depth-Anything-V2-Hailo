@@ -35,30 +35,20 @@ def load_image(img_path: str, image_size: tuple[int, int]):
     # Convert to float32
     image = image.astype(np.float32)
 
+    # Calculate ratios for width and height
     width_ratio = image_size[0] / image.shape[1]
     height_ratio = image_size[1] / image.shape[0]
 
-    # Resize to the desired image size
-    if width_ratio < height_ratio:
-        image = cv2.resize(
-            image,
-            (image_size[0], int(image.shape[0] * width_ratio)),
-            interpolation=cv2.INTER_LINEAR,
-        )
-    else:
-        image = cv2.resize(
-            image,
-            (int(image.shape[1] * height_ratio), image_size[1]),
-            interpolation=cv2.INTER_LINEAR,
-        )
+    # Use the larger ratio so both dimensions meet or exceed the target size
+    scale = max(width_ratio, height_ratio)
+    new_width = int(image.shape[1] * scale)
+    new_height = int(image.shape[0] * scale)
+    image = cv2.resize(image, (new_width, new_height), interpolation=cv2.INTER_LINEAR)
 
-    # Crop the image to the desired image size from the center
-    h, w = image.shape[:2]
-    start_h = (h - image_size[1]) // 2
-    start_w = (w - image_size[0]) // 2
-    image = image[
-        start_h : start_h + image_size[1], start_w : start_w + image_size[0], :
-    ]
+    # Crop the image to the desired size from the center
+    start_w = (new_width - image_size[0]) // 2
+    start_h = (new_height - image_size[1]) // 2
+    image = image[start_h : start_h + image_size[1], start_w : start_w + image_size[0]]
 
     # Skip Normalization because it's done in the model script.
 

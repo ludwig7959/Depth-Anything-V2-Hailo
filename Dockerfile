@@ -33,8 +33,8 @@ COPY . /workspace/depth-anything-v2-hailo
 WORKDIR /workspace/depth-anything-v2-hailo
 
 # Create a virtual environment and activate it
-RUN virtualenv -p python3.10 .venv
-RUN source .venv/bin/activate
+RUN virtualenv venv
+RUN bash -c "source venv/bin/activate"
 
 # Upgrade pip
 RUN pip install --upgrade pip
