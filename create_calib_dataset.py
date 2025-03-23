@@ -65,24 +65,24 @@ def load_image(img_path: str, image_size: tuple[int, int]):
     return image
 
 
-def create_calib_dataset(args: dict):
+def create_calib_dataset(data_dir: str, output_path: str, image_size: tuple[int, int]):
     # Get all image files in the data directory
     images_list = [
         img_name
-        for img_name in os.listdir(args.data_dir)
+        for img_name in os.listdir(data_dir)
         if (
             os.path.splitext(img_name)[1] == ".jpg"
             or os.path.splitext(img_name)[1] == ".png"
         )
-        and os.path.isfile(os.path.join(args.data_dir, img_name))
+        and os.path.isfile(os.path.join(data_dir, img_name))
     ]
 
     # Load and process the images
     images = []
     for img_name in tqdm(images_list, desc="Processing images"):
         image = load_image(
-            os.path.join(args.data_dir, img_name),
-            (args.image_size[0], args.image_size[1]),
+            os.path.join(data_dir, img_name),
+            image_size,
         )
         images.append(image)
 
@@ -90,10 +90,14 @@ def create_calib_dataset(args: dict):
     images = np.array(images)
 
     # Save the calibration dataset
-    np.save(args.output_path, images)
+    np.save(output_path, images)
 
-    print(f"Calib dataset created at {args.output_path}")
+    print(f"Calib dataset created at {output_path}")
 
 
 if __name__ == "__main__":
-    create_calib_dataset(args)
+    create_calib_dataset(
+        data_dir=args.data_dir,
+        output_path=args.output_path,
+        image_size=args.image_size,
+    )
