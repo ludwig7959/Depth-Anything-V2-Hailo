@@ -33,7 +33,6 @@ def onnx_to_har(
     onnx_path: str,
     onnx_model_name: str,
     output_path: str,
-    input_size: tuple[int, int],
 ):
     """
     Convert an ONNX model to a Hailo Archive file.
@@ -59,5 +58,4 @@ if __name__ == "__main__":
         onnx_path=args.onnx_path,
         onnx_model_name=args.onnx_model_name,
         output_path=args.output_path,
-        input_size=args.input_size,
     )
