@@ -32,18 +32,17 @@ COPY . /workspace/depth-anything-v2-hailo
 # Set the working directory
 WORKDIR /workspace/depth-anything-v2-hailo
 
-# Create a virtual environment and activate it
+# Create a virtual environment
 RUN virtualenv venv
-RUN bash -c "source venv/bin/activate"
 
 # Upgrade pip
-RUN pip install --upgrade pip
+RUN venv/bin/pip install --upgrade pip
 
 # Install Hailo DFC
-RUN pip install hailo_dataflow_compiler-3.30.0-py3-none-linux_x86_64.whl
+RUN venv/bin/pip install hailo_dataflow_compiler-3.30.0-py3-none-linux_x86_64.whl
 
 # Install the project dependencies
-RUN pip install -r requirements.txt
+RUN venv/bin/pip install -r requirements.txt
 
 # Create a user for the Hailo DFC container
 ARG user=hailo
