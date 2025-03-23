@@ -22,7 +22,7 @@ parser.add_argument(
     "--image-size",
     type=int,
     nargs=2,
-    default=(952, 476),
+    default=(700, 350),
     help="Image size of the calibration dataset, Should be the same as the input size of the model. (Width, Height)",
 )
 args = parser.parse_args()
