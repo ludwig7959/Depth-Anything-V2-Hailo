@@ -44,6 +44,9 @@ RUN venv/bin/pip install hailo_dataflow_compiler-3.30.0-py3-none-linux_x86_64.wh
 # Install the project dependencies
 RUN venv/bin/pip install -r requirements.txt
 
+# Install DALI
+RUN venv/bin/pip install --extra-index-url https://developer.download.nvidia.com/compute/redist nvidia-dali-cuda110 nvidia-dali-tf-plugin-cuda110
+
 # Create a user for the Hailo DFC container
 ARG user=hailo
 ARG group=hailo
