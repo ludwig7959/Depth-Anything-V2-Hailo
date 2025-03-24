@@ -21,6 +21,13 @@ parser.add_argument(
     "--output-path", type=str, required=True, help="Path to save the optimized model"
 )
 parser.add_argument(
+    "--optimization-level",
+    type=int,
+    default=4,
+    choices=[0, 1, 2, 3, 4],
+    help="Optimization level for the model",
+)
+parser.add_argument(
     "--batch-size",
     type=int,
     default=1,
@@ -41,7 +48,7 @@ def optimize(har_path: str, calib_dataset_path: str, output_path: str):
 
     # Define the model script
     all_lines = [
-        f"model_optimization_flavor(batch_size={args.batch_size})\n",
+        f"model_optimization_flavor(optimization_level={args.optimization_level}, batch_size={args.batch_size})\n",
         "input_normalization = normalization([123.675, 116.28, 103.53], [58.395, 57.12, 57.375])\n",
     ]
     runner.load_model_script("".join(all_lines))
