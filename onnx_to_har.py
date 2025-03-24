@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser(description="Convert ONNX model to Hailo Archiv
 parser.add_argument(
     "--hw-arch",
     type=str,
-    choices=["hailo8", "hailo8l", "hailo10", "hailo15h", "hailo15m"],
+    choices=["hailo8", "hailo8l", "hailo8r", "hailo10h", "hailo15h", "hailo15m"],
     required=True,
     help="Target Hailo hardware architecture",
 )
